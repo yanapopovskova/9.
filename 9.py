@@ -1,6 +1,6 @@
 from tkinter import *
 import tkinter.messagebox as MessageBox
-
+import os
 
 def validate_registration():
     username = entry_username.get()
@@ -17,7 +17,6 @@ def validate_registration():
         MessageBox.showinfo("Ошибка", "Пароль и подтверждение пароля не совпадают")
     else:
         save_registration(username, password)
-
 
 def save_registration(username, password):
     file = open("data.txt", "a")
@@ -40,6 +39,10 @@ def validate_login():
 
 
 def check_login(username, password):
+    if not os.path.exists("data.txt"):
+        MessageBox.showinfo("Ошибка", "Неверный логин или пароль")
+        return
+
     file = open("data.txt", "r")
     lines = file.readlines()
     file.close()
