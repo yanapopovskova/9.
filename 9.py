@@ -86,6 +86,15 @@ def register():
     button_register.pack()
 
 
+def show_password():
+    if checkbutton_show_password.get():
+        entry_password.config(show="")
+        entry_confirm_password.config(show="")
+    else:
+        entry_password.config(show="*")
+        entry_confirm_password.config(show="*")
+
+
 root = Tk()
 root.title("Вход")
 
@@ -99,6 +108,12 @@ label_password = Label(root, text="Пароль:", font=("Arial", 12))
 label_password.pack()
 entry_password = Entry(root, show="*", font=("Arial", 12))
 entry_password.pack()
+
+label_show_password = Label(root, text="Показать пароль:")
+label_show_password.pack()
+checkbutton_show_password = BooleanVar()
+checkbutton = Checkbutton(root, variable=checkbutton_show_password, command=show_password)
+checkbutton.pack()
 
 button_login = Button(root, text="Войти", command=validate_login)
 button_login.pack()
