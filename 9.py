@@ -65,6 +65,7 @@ def register():
 
     registration_window = Toplevel(root)
     registration_window.title("Регистрация")
+    registration_window.geometry("500x400")
 
 
     label_username = Label(registration_window, text="Логин:", font=("Arial", 12))
@@ -82,7 +83,7 @@ def register():
     entry_confirm_password = Entry(registration_window, show="*", font=("Arial", 12))
     entry_confirm_password.pack()
 
-    button_register = Button(registration_window, text="Зарегистрироваться", command=validate_registration)
+    button_register = Button(registration_window, text="Зарегистрироваться", font=("Arial", 12), command=validate_registration)
     button_register.pack()
 
 
@@ -97,6 +98,7 @@ def show_password():
 
 root = Tk()
 root.title("Вход")
+root.geometry("500x400")
 
 
 label_username = Label(root, text="Логин:", font=("Arial", 12))
@@ -115,10 +117,10 @@ checkbutton_show_password = BooleanVar()
 checkbutton = Checkbutton(root, variable=checkbutton_show_password, command=show_password)
 checkbutton.pack()
 
-button_login = Button(root, text="Войти", command=validate_login)
+button_login = Button(root, text="Войти", font=("Arial", 12), command=validate_login)
 button_login.pack()
 
-button_register = Button(root, text="Регистрация", command=register)
+button_register = Button(root, text="Регистрация", font=("Arial", 12), command=register)
 button_register.pack()
 
 root.mainloop()
