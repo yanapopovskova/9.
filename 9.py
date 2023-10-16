@@ -1,6 +1,6 @@
 from tkinter import *
 import tkinter.messagebox as MessageBox
-import os
+
 
 def validate_registration():
     username = entry_username.get()
@@ -17,6 +17,7 @@ def validate_registration():
         MessageBox.showinfo("Ошибка", "Пароль и подтверждение пароля не совпадают")
     else:
         save_registration(username, password)
+
 
 def save_registration(username, password):
     file = open("data.txt", "a")
@@ -39,10 +40,6 @@ def validate_login():
 
 
 def check_login(username, password):
-    if not os.path.exists("data.txt"):
-        MessageBox.showinfo("Ошибка", "Неверный логин или пароль")
-        return
-
     file = open("data.txt", "r")
     lines = file.readlines()
     file.close()
@@ -83,23 +80,13 @@ def register():
     entry_confirm_password = Entry(registration_window, show="*", font=("Arial", 12))
     entry_confirm_password.pack()
 
-    button_register = Button(registration_window, text="Зарегистрироваться", font=("Arial", 12), command=validate_registration)
+    button_register = Button(registration_window, text="Зарегистрироваться", command=validate_registration)
     button_register.pack()
-
-
-def show_password():
-    if checkbutton_show_password.get():
-        entry_password.config(show="")
-        entry_confirm_password.config(show="")
-    else:
-        entry_password.config(show="*")
-        entry_confirm_password.config(show="*")
 
 
 root = Tk()
 root.title("Вход")
 root.geometry("500x400")
-
 
 label_username = Label(root, text="Логин:", font=("Arial", 12))
 label_username.pack()
@@ -110,12 +97,6 @@ label_password = Label(root, text="Пароль:", font=("Arial", 12))
 label_password.pack()
 entry_password = Entry(root, show="*", font=("Arial", 12))
 entry_password.pack()
-
-label_show_password = Label(root, text="Показать пароль:")
-label_show_password.pack()
-checkbutton_show_password = BooleanVar()
-checkbutton = Checkbutton(root, variable=checkbutton_show_password, command=show_password)
-checkbutton.pack()
 
 button_login = Button(root, text="Войти", font=("Arial", 12), command=validate_login)
 button_login.pack()
