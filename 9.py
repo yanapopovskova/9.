@@ -1,107 +1,106 @@
 from tkinter import *
-import tkinter.messagebox as MessageBox
+import tkinter.messagebox as messagebox
+import os
 
+def register_window():
+    global previous_register_window
+    if previous_register_window:
+        previous_register_window.destroy()
 
-def validate_registration():
-    username = entry_username.get()
-    password = entry_password.get()
-    confirm_password = entry_confirm_password.get()
+    register_window = Toplevel(root)
+    previous_register_window = register_window
+    register_window.title("Регистрация")
 
-    if username == "":
-        MessageBox.showinfo("Ошибка", "Введите логин")
-    elif password == "":
-        MessageBox.showinfo("Ошибка", "Введите пароль")
-    elif confirm_password == "":
-        MessageBox.showinfo("Ошибка", "Введите подтверждение пароля")
-    elif password != confirm_password:
-        MessageBox.showinfo("Ошибка", "Пароль и подтверждение пароля не совпадают")
-    else:
-        save_registration(username, password)
+    register_window_width = 300
+    register_window_height = 300
 
+    register_window_x = int((screen_width / 2) - (register_window_width / 2))
+    register_window_y = int((screen_height / 2) - (register_window_height / 2))
 
-def save_registration(username, password):
-    file = open("data.txt", "a")
-    file.write(username + "," + password + '\n')
-    file.close()
+    register_window.geometry(f"{register_window_width}x{register_window_height}+{register_window_x}+{register_window_y}")
 
-    MessageBox.showinfo("Успех", "Регистрация завершена успешно")
+    label_register_username = Label(register_window, text="Логин:", font=("Arial", 12))
+    label_register_username.pack()
+    entry_register_username = Entry(register_window)
+    entry_register_username.pack()
 
+    label_register_password = Label(register_window, text="Пароль:", font=("Arial", 12))
+    label_register_password.pack()
+    entry_register_password = Entry(register_window, show="*")
+    entry_register_password.pack()
 
-def validate_login():
-    username = entry_username.get()
-    password = entry_password.get()
+    label_register_confirm_password = Label(register_window, text="Подтверждение пароля:",  font=("Arial", 12))
+    label_register_confirm_password.pack()
+    entry_register_confirm_password = Entry(register_window, show="*")
+    entry_register_confirm_password.pack()
 
-    if username == "":
-        MessageBox.showinfo("Ошибка", "Введите логин")
-    elif password == "":
-        MessageBox.showinfo("Ошибка", "Введите пароль")
-    else:
-        check_login(username, password)
-
-
-def check_login(username, password):
-    file = open("data.txt", "r")
-    lines = file.readlines()
-    file.close()
-
-    found = False
-    for line in lines:
-        user, passw = line.strip().split(",")
-        if user == username and passw == password:
-            found = True
-            break
-
-    if found:
-        MessageBox.showinfo("Успех", "Вход выполнен успешно")
-    else:
-        MessageBox.showinfo("Ошибка", "Данные для входа неверны")
-
-
-def register():
-    global entry_username, entry_password, entry_confirm_password
-
-    registration_window = Toplevel(root)
-    registration_window.title("Регистрация")
-    registration_window.geometry("500x400")
-
-
-    label_username = Label(registration_window, text="Логин:", font=("Arial", 12))
-    label_username.pack()
-    entry_username = Entry(registration_window, font=("Arial", 12))
-    entry_username.pack()
-
-    label_password = Label(registration_window, text="Пароль:", font=("Arial", 12))
-    label_password.pack()
-    entry_password = Entry(registration_window, show="*", font=("Arial", 12))
-    entry_password.pack()
-
-    label_confirm_password = Label(registration_window, text="Подтверждение пароля:", font=("Arial", 12))
-    label_confirm_password.pack()
-    entry_confirm_password = Entry(registration_window, show="*", font=("Arial", 12))
-    entry_confirm_password.pack()
-
-    button_register = Button(registration_window, text="Зарегистрироваться", command=validate_registration)
+    button_register = Button(register_window, text="Регистрация",  font=("Arial", 12), command=lambda: register(entry_register_username.get(), entry_register_password.get(), entry_register_confirm_password.get(), register_window))
     button_register.pack()
+
+
+def register(username, password, confirm_password, register_window):
+    if username == "" or password == "" or confirm_password == "":
+        messagebox.showerror("Ошибка", "Пожалуйста, заполните все поля")
+        return
+
+    if password != confirm_password:
+        messagebox.showerror("Ошибка", "Пароли не совпадают")
+        return
+
+    with open("data.txt", "a") as file:
+        file.write(f"{username},{password}\n")
+
+    messagebox.showinfo("Регистрация", "Регистрация прошла успешно")
+    register_window.destroy()
+
+
+def login(username, password):
+    if username == "" or password == "":
+        messagebox.showerror("Ошибка", "Пожалуйста, заполните все поля")
+        return
+
+    if not os.path.isfile("data.txt"):
+        messagebox.showerror("Ошибка", "Неверное имя пользователя или пароль")
+        return
+
+    with open("data.txt", "r") as file:
+        for line in file:
+            stored_username, stored_password = line.strip().split(",")
+            if username == stored_username and password == stored_password:
+                messagebox.showinfo("Вход", "Вход выполнен")
+                return
+
+    messagebox.showerror("Ошибка", "Неверное имя пользователя или пароль")
 
 
 root = Tk()
 root.title("Вход")
-root.geometry("500x400")
 
-label_username = Label(root, text="Логин:", font=("Arial", 12))
-label_username.pack()
-entry_username = Entry(root, font=("Arial", 12))
-entry_username.pack()
+label_login_username = Label(root, text="Логин:", font=("Arial", 12))
+label_login_username.pack()
+entry_login_username = Entry(root)
+entry_login_username.pack()
 
-label_password = Label(root, text="Пароль:", font=("Arial", 12))
-label_password.pack()
-entry_password = Entry(root, show="*", font=("Arial", 12))
-entry_password.pack()
+label_login_password = Label(root, text="Пароль:", font=("Arial", 12))
+label_login_password.pack()
+entry_login_password = Entry(root, show="*")
+entry_login_password.pack()
 
-button_login = Button(root, text="Войти", font=("Arial", 12), command=validate_login)
+button_login = Button(root, text="Вход",  font=("Arial", 12), command=lambda: login(entry_login_username.get(), entry_login_password.get()))
 button_login.pack()
 
-button_register = Button(root, text="Регистрация", font=("Arial", 12), command=register)
+button_register = Button(root, text="Регистрация",  font=("Arial", 12), command=register_window)
 button_register.pack()
+
+# Получение размеров экрана
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+x = int((screen_width / 2) - (200 / 2))
+y = int((screen_height / 2) - (200 / 2))
+
+root.geometry(f"300x300+{x}+{y}")
+
+previous_register_window = None
 
 root.mainloop()
