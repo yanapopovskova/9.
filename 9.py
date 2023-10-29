@@ -92,7 +92,6 @@ button_login.pack()
 button_register = Button(root, text="Регистрация",  font=("Arial", 12), command=register_window)
 button_register.pack()
 
-# Получение размеров экрана
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
