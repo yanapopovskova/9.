@@ -3,12 +3,8 @@ import tkinter.messagebox as messagebox
 import os
 
 def register_window():
-    global previous_register_window
-    if previous_register_window:
-        previous_register_window.destroy()
-
+    root.withdraw()  # Скрыть основное окно
     register_window = Toplevel(root)
-    previous_register_window = register_window
     register_window.title("Регистрация")
 
     register_window_width = 300
@@ -68,10 +64,10 @@ def login(username, password):
             stored_username, stored_password = line.strip().split(",")
             if username == stored_username and password == stored_password:
                 messagebox.showinfo("Вход", "Вход выполнен")
+                root.destroy()  # Закрыть окно входа
                 return
 
     messagebox.showerror("Ошибка", "Неверное имя пользователя или пароль")
-
 
 root = Tk()
 root.title("Вход")
